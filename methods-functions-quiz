@@ -1,0 +1,259 @@
+import random
+
+# Dictionary of method names and basic descriptions for different data types
+method_definitions = {
+    'string': {
+        "capitalize()": "Converts the first character of the string to uppercase.",
+        "casefold()": "Returns a casefolded version of the string.",
+        "lower()": "Converts the string to lowercase.",
+        "upper()": "Converts the string to uppercase.",
+        "strip()": "Removes leading and trailing whitespace from the string.",
+        "replace()": "Replaces occurrences of a substring with another substring.",
+        "split()": "Splits the string into a list of substrings based on a delimiter.",
+        "join()": "Concatenates elements of an iterable into a string using the string as a delimiter.",
+        "startswith()": "Checks if the string starts with a specified prefix.",
+        "endswith()": "Checks if the string ends with a specified suffix.",
+        "isalpha()": "Returns True if all characters in the string are alphabetic.",
+        "isdigit()": "Returns True if all characters in the string are digits.",
+        "islower()": "Returns True if all characters in the string are lowercase.",
+        "isupper()": "Returns True if all characters in the string are uppercase.",
+        "isspace()": "Returns True if all characters in the string are whitespace.",
+        "isalnum()": "Returns True if all characters in the string are alphanumeric.",
+        "isnumeric()": "Returns True if all characters in the string are numeric.",
+        "title()": "Converts the string to titlecase.",
+        "count()": "Returns the number of occurrences of a substring in the string.",
+        "find()": "Returns the lowest index of a substring in the string (-1 if not found).",
+        "index()": "Returns the lowest index of a substring in the string (raises ValueError if not found).",
+        "partition()": "Splits the string at the first occurrence of a separator and returns a tuple.",
+        "rpartition()": "Splits the string at the last occurrence of a separator and returns a tuple.",
+        "zfill()": "Returns a copy of the string padded with zeros.",
+        "encode()": "Encodes the string using the specified encoding.",
+        "maketrans()": "Returns a translation table for use with translate() method.",
+        "translate()": "Returns a copy of the string with specified characters replaced by others.",
+        "center()": "Returns a centered string of specified width with padding.",
+        "ljust()": "Returns a left-justified string of specified width with padding.",
+        "rjust()": "Returns a right-justified string of specified width with padding.",
+        "startswith()": "Returns True if the string starts with the specified prefix.",
+        "endswith()": "Returns True if the string ends with the specified suffix."
+    },
+    'list': {
+        "append()": "Adds an element to the end of the list.",
+        "extend()": "Extends the list by appending elements from an iterable.",
+        "insert()": "Inserts an element at a specified position in the list.",
+        "remove()": "Removes the first occurrence of a specified element from the list.",
+        "pop()": "Removes and returns the element at a specified position (default is the last element).",
+        "index()": "Returns the index of the first occurrence of a specified element in the list.",
+        "count()": "Returns the number of occurrences of a specified element in the list.",
+        "sort()": "Sorts the list in place.",
+        "reverse()": "Reverses the order of the elements in the list.",
+        "copy()": "Returns a shallow copy of the list."
+    },
+    'dictionary': {
+        "keys()": "Returns a view of the keys in the dictionary.",
+        "values()": "Returns a view of the values in the dictionary.",
+        "items()": "Returns a view of the key-value pairs in the dictionary.",
+        "get()": "Returns the value associated with a specified key.",
+        "update()": "Updates the dictionary with key-value pairs from another dictionary or iterable.",
+        "pop()": "Removes and returns the value associated with a specified key.",
+        "popitem()": "Removes and returns an arbitrary key-value pair from the dictionary.",
+        "clear()": "Removes all items from the dictionary.",
+        "copy()": "Returns a shallow copy of the dictionary.",
+        "fromkeys()": "Creates a new dictionary with specified keys and values.",
+        "setdefault()": "Returns the value of a specified key; inserts the key with a default value if not present."
+    },
+    'set': {
+        "add()": "Adds an element to the set.",
+        "remove()": "Removes a specified element from the set.",
+        "discard()": "Removes a specified element from the set if it is present.",
+        "pop()": "Removes and returns an arbitrary element from the set.",
+        "clear()": "Removes all elements from the set.",
+        "copy()": "Returns a shallow copy of the set.",
+        "union()": "Returns a new set containing all unique elements from the set and another iterable.",
+        "intersection()": "Returns a new set containing elements common to the set and another iterable.",
+        "difference()": "Returns a new set containing elements in the set but not in another iterable.",
+        "symmetric_difference()": "Returns a new set containing elements present in either set, but not both."
+    },
+    'tuple': {
+        "count()": "Returns the number of occurrences of a specified element in the tuple.",
+        "index()": "Returns the index of the first occurrence of a specified element in the tuple."
+    }
+}
+
+# Dictionary of built-in function names and basic descriptions
+builtin_function_definitions = {
+    'abs()': "Returns the absolute value of a number.",
+    'all()': "Returns True if all elements of an iterable are true (or if the iterable is empty).",
+    'any()': "Returns True if any element of an iterable is true. If the iterable is empty, returns False.",
+    'bool()': "Converts a value to boolean (True or False).",
+    'callable()': "Returns True if the object argument appears callable, False if not.",
+    'chr()': "Returns the string representing a character whose Unicode code point is the integer.",
+    'dir()': "Without arguments, return the list of names in the current local scope. With an argument, attempt to return a list of valid attributes for that object.",
+    'divmod()': "Returns the quotient and the remainder when dividing two numbers.",
+    'enumerate()': "Returns an enumerate object. It contains the index and value of all the items of the iterable.",
+    'filter()': "Constructs an iterator from elements of an iterable for which a function returns true.",
+    'float()': "Returns a floating-point number constructed from a number or string.",
+    'format()': "Returns a formatted representation of a value.",
+    'getattr()': "Returns the value of the named attribute of an object.",
+    'hasattr()': "Returns True if the object has the named attribute.",
+    'hex()': "Converts an integer to a lowercase hexadecimal string prefixed with '0x'.",
+    'id()': "Returns the identity of an object.",
+    'input()': "Reads a line from input, converts it to a string (stripping a trailing newline), and returns that.",
+    'int()': "Returns an integer object constructed from a number or string.",
+    'isinstance()': "Returns True if the object argument is an instance of the classinfo argument.",
+    'iter()': "Returns an iterator object.",
+    'len()': "Returns the length (the number of items) of an object.",
+    'list()': "Returns a list.",
+    'map()': "Applies a function to all the items in an input iterable.",
+    'max()': "Returns the largest item in an iterable or the largest of two or more arguments.",
+    'min()': "Returns the smallest item in an iterable or the smallest of two or more arguments.",
+    'next()': "Retrieves the next item from the iterator.",
+    'oct()': "Converts an integer to an octal string prefixed with '0o'.",
+    'ord()': "Returns the Unicode code point for a one-character string.",
+    'pow()': "Returns x to the power of y.",
+    'print()': "Prints the given object(s) to the standard output.",
+    'range()': "Returns a sequence of numbers, starting from 0 by default, and increments by 1 (by default), and stops before a specified number.",
+    'repr()': "Returns a printable representation of the object.",
+    'reversed()': "Returns a reverse iterator.",
+    'round()': "Rounds a number to a specified precision in decimal digits.",
+    'set()': "Returns a new set object.",
+    'slice()': "Returns a slice object.",
+    'sorted()': "Returns a new sorted list from the elements of any iterable.",
+    'str()': "Returns a string object.",
+    'sum()': "Sums the items of an iterable.",
+    'tuple()': "Returns a tuple.",
+    'type()': "Returns the type of an object.",
+    'vars()': "Returns the __dict__ attribute for a module, class, instance, or any other object with a __dict__ attribute.",
+    'zip()': "Returns an iterator of tuples, where the i-th tuple contains the i-th element from each of the argument sequences or iterables."
+}
+
+# Generate random questions based on the selected data type or built-in functions
+def generate_questions(data_type=None, num_questions=0):
+    questions = []
+
+    if data_type in method_definitions:
+        data_methods = method_definitions[data_type]
+        method_names = list(data_methods.keys())
+
+        # Select random methods for each question
+        for _ in range(num_questions):
+            method_name = random.choice(method_names)
+            correct_answer = data_methods[method_name]
+            
+            # Generate incorrect options by randomly selecting other method descriptions
+            options = [correct_answer]
+            while len(options) < 4:
+                random_option = random.choice(list(data_methods.values()))
+                if random_option not in options:
+                    options.append(random_option)
+
+            # Shuffle options to randomize the order
+            random.shuffle(options)
+            
+            # Create the question dictionary
+            question = {
+                "question": f"What does the '{method_name}' method do for {data_type}s?",
+                "options": options,
+                "answer": correct_answer
+            }
+            questions.append(question)
+
+    elif data_type == 'functions':
+        function_names = list(builtin_function_definitions.keys())
+
+        # Select random functions for each question
+        for _ in range(num_questions):
+            function_name = random.choice(function_names)
+            correct_answer = builtin_function_definitions[function_name]
+            
+            # Generate incorrect options by randomly selecting other function descriptions
+            options = [correct_answer]
+            while len(options) < 4:
+                random_option = random.choice(list(builtin_function_definitions.values()))
+                if random_option not in options:
+                    options.append(random_option)
+
+            # Shuffle options to randomize the order
+            random.shuffle(options)
+            
+            # Create the question dictionary
+            question = {
+                "question": f"What does the '{function_name}' function do?",
+                "options": options,
+                "answer": correct_answer
+            }
+            questions.append(question)
+
+    return questions
+
+# Run the quiz based on user-selected option
+def run_quiz():
+    print("Welcome to the Python Quiz!\n")
+    print("What would you like to practice?")
+    print("1. Built-in Functions")
+    print("2. Data Type Methods")
+
+    while True:
+        # Prompt user to choose between built-in functions or data type methods
+        while True:
+            choice = input("Enter the number corresponding to your choice (1 or 2): ")
+            if choice.isdigit() and int(choice) in [1, 2]:
+                break
+            else:
+                print("Invalid input. Please enter either 1 or 2.")
+
+        if choice == '1':
+            # Practice built-in functions
+            num_questions = int(input("How many questions would you like to answer? "))
+            questions = generate_questions(data_type='functions', num_questions=num_questions)
+        elif choice == '2':
+            # Practice data type methods
+            print("\nChoose a data type to practice methods for:")
+            print("1. String")
+            print("2. List")
+            print("3. Tuple")
+            print("4. Set")
+            print("5. Dictionary")
+            data_type_choice = input("Enter the number corresponding to your choice (1-5): ")
+
+            data_types = ['string', 'list', 'tuple', 'set', 'dictionary']
+            selected_data_type = data_types[int(data_type_choice) - 1]
+            num_questions = int(input("How many questions would you like to answer? "))
+
+            questions = generate_questions(data_type=selected_data_type, num_questions=num_questions)
+
+        score = 0
+
+        print("\nLet's start the quiz!\n")
+
+        for i, question in enumerate(questions, start=1):
+            print(f"Question {i}: {question['question']}")
+            for j, option in enumerate(question['options'], start=1):
+                print(f"{j}. {option}")
+
+            while True:
+                user_answer = input("Enter your choice (1-4): ")
+                if user_answer.isdigit() and 1 <= int(user_answer) <= 4:
+                    break
+                else:
+                    print("Invalid input. Please enter a number between 1 and 4.")
+
+            selected_option = question["options"][int(user_answer) - 1]
+            if selected_option == question["answer"]:
+                print("Correct!\n")
+                score += 1
+            else:
+                print(f"Wrong! The correct answer is: {question['answer']}\n")
+
+        # Calculate percentage score
+        percentage_score = (score / num_questions) * 100
+        print(f"You answered {score} out of {num_questions} questions correctly.")
+        print(f"Your score: {percentage_score:.2f}%\n")
+
+        # Ask if the user wants to play again
+        play_again = input("Would you like to play again? (yes/no): ").lower()
+        if play_again != 'yes':
+            print("Thank you for playing!")
+            break
+
+# Run the quiz
+run_quiz()
