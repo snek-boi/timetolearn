@@ -1,0 +1,90 @@
+import random
+
+# Define the list of method definitions
+method_definitions = {
+    "append()": "Adds an element to the end of the list.",
+    "extend()": "Adds elements from an iterable to the end of the list.",
+    "insert()": "Inserts an element at a specified position in the list.",
+    "remove()": "Removes the first occurrence of a specified element from the list.",
+    "pop()": "Removes and returns the element at the specified position (default: last element).",
+    "index()": "Returns the index of the first occurrence of a specified element in the list.",
+    "count()": "Returns the number of occurrences of a specified element in the list.",
+    "sort()": "Sorts the elements of the list in ascending order (custom sorting can be defined with a key function).",
+    "reverse()": "Reverses the order of the elements in the list.",
+    "copy()": "Returns a shallow copy of the list.",
+    "clear()": "Removes all elements from the list."
+}
+
+
+# Generate random questions based on list methods
+def generate_questions(num_questions):
+    questions = []
+
+    # Select random list methods for each question
+    for _ in range(num_questions):
+        method_name = random.choice(list(method_definitions.keys()))
+        correct_answer = method_definitions[method_name]
+
+        # Generate incorrect options by randomly selecting other method definitions
+        options = [correct_answer]
+        while len(options) < 4:
+            random_option = random.choice(list(method_definitions.values()))
+            if random_option not in options:
+                options.append(random_option)
+
+        # Shuffle options to randomize the order
+        random.shuffle(options)
+
+        # Create the question dictionary
+        question = {
+            "question": f"What does the '{method_name}' method do?",
+            "options": options,
+            "answer": correct_answer
+        }
+        questions.append(question)
+
+    return questions
+
+
+# Run the quiz using generated questions
+def run_quiz():
+    while True:
+        num_questions = int(
+            input("How many questions would you like to answer? "))
+        questions = generate_questions(num_questions)
+        score = 0
+
+        print("\nWelcome to the List Methods Quiz!\n")
+
+        for i, question in enumerate(questions, start=1):
+            print(f"Question {i}: {question['question']}")
+            for j, option in enumerate(question['options'], start=1):
+                print(f"{j}. {option}")
+
+            user_answer = input("Enter your choice (1-4): ")
+
+            if user_answer.isdigit() and 1 <= int(user_answer) <= 4:
+                selected_option = question["options"][int(user_answer) - 1]
+                if selected_option == question["answer"]:
+                    print("Correct!\n")
+                    score += 1
+                else:
+                    print(
+                        f"Wrong! The correct answer is: {question['answer']}\n")
+            else:
+                print(
+                    "Invalid input. Please enter a number between 1 and 4.\n")
+
+        # Calculate percentage score
+        percentage_score = (score / num_questions) * 100
+        print(
+            f"Quiz completed! Your final score is: {score}/{num_questions} ({percentage_score:.2f}%)\n")
+
+        play_again = input("Would you like to play again? (yes/no): ").lower()
+        if play_again != "yes":
+            print("Thank you for playing!")
+            break
+
+
+# Run the quiz
+run_quiz()
